@@ -2,8 +2,10 @@
 
 const Header = () => {
   let userInfo = { name: "Sara" }
-  if (localStorage.getItem("userInfo")) {
-    userInfo = JSON.parse(localStorage.getItem("userInfo") || "")
+  if (typeof window !== "undefined") {
+    if (localStorage.getItem("userInfo")) {
+      userInfo = JSON.parse(localStorage.getItem("userInfo") || "")
+    }
   }
   return (
     <div className="fixed left-0 top-0 flex px-2 w-full border-b border-gray-300 py-3 bg-white shadow-sm shadow-bottom z-10">

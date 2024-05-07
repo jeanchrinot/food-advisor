@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import AppLayout from "@/components/app/AppLayout"
 import Home from "./Home"
 
@@ -7,9 +8,15 @@ export const metadata = {
 const HomePage = () => {
   return (
     <AppLayout activeItem="home">
-      <Home />
+      <Suspense fallback={<Loading />}>
+        <Home />
+      </Suspense>
     </AppLayout>
   )
+}
+
+function Loading() {
+  return <h2>🌀 Loading...</h2>
 }
 
 export default HomePage
