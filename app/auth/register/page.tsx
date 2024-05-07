@@ -2,13 +2,28 @@
 
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import toast, { Toaster } from "react-hot-toast"
 
 const RegisterPage = () => {
   const router = useRouter()
+  const [name, setName] = useState("Ahmet Kaya")
+  const [email, setEmail] = useState("ahmet@test.com")
+  const [password, setPassword] = useState("12345678")
 
   const onSubmit = () => {
-    // console.log(e)
-    router.push("/home")
+    if (email && password && name) {
+      const userInfo = {
+        name,
+        email,
+        password,
+      }
+      localStorage.setItem("userInfo", JSON.stringify(userInfo))
+      toast.success("Hesap oluşturdu!")
+      router.push("/home")
+    } else {
+      toast.error("Lütfen, bilgileri giriniz!")
+    }
   }
   return (
     <main className="flex min-h-screen w-screen overflow-hidden flex-col items-center justify-between">
@@ -29,9 +44,10 @@ const RegisterPage = () => {
               </span>
               <input
                 type="text"
-                value=""
+                defaultValue="Ahmet Kaya"
                 placeholder="Adınızı yazın"
                 className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                onChange={(e) => setName(e.target.value)}
               />
             </label>
             <label className="block mb-3">
@@ -40,9 +56,10 @@ const RegisterPage = () => {
               </span>
               <input
                 type="email"
-                value=""
+                defaultValue="ahmet@test.com"
                 placeholder="test@example.com"
                 className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </label>
             <label className="block mb-3">
@@ -51,9 +68,10 @@ const RegisterPage = () => {
               </span>
               <input
                 type="password"
-                value=""
+                defaultValue="12345678"
                 placeholder=""
                 className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </label>
             <label className="block mb-3">
@@ -62,14 +80,14 @@ const RegisterPage = () => {
               </span>
               <input
                 type="password"
-                value=""
+                defaultValue="12345678"
                 placeholder=""
                 className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
               />
             </label>
             <button
               className="w-full mb-3 border bg-green-700 text-white font-bold py-2 px-4 rounded"
-              onClick={() => router.push("/home")}
+              onClick={onSubmit}
             >
               Hesap Oluştur
             </button>
@@ -77,6 +95,7 @@ const RegisterPage = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </main>
   )
 }

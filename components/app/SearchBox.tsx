@@ -21,7 +21,7 @@ const SearchBox = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.target.value
     // setSearchTerm(newSearchTerm);
-    router.push(`${pathname}?q=${newSearchTerm}`)
+    router.push(`/recycle?q=${newSearchTerm}`)
   }
 
   return (

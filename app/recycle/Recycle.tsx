@@ -6,10 +6,12 @@ import data from "@/lib/data"
 import { useState, useEffect } from "react"
 // import { useRouter } from "next/router"
 import { useSearchParams } from "next/navigation"
+import Link from "next/link"
 
 const Recycle = () => {
   //   const router = useRouter()
   const searchParams = useSearchParams()
+  const [selectedWasteCategory, setSelectedWasteCategory] = useState(null)
   const { wasteCategories } = data
   const [searchTerm, setSearchTerm] = useState<string>("")
 
@@ -20,6 +22,14 @@ const Recycle = () => {
       setSearchTerm(q)
     }
   }, [searchParams])
+
+  //   useEffect(() => {
+  //     // const { search } = router.query
+  //     const q = searchParams.get("q") || ""
+  //     if (typeof q === "string") {
+  //       setSearchTerm(q)
+  //     }
+  //   }, [selectedWasteCategory])
 
   const filteredCategories = wasteCategories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -46,21 +56,23 @@ const Recycle = () => {
         <div className="grid grid-cols-2 gap-2 mt-3">
           {filteredCategories.map((wasteCat) => {
             return (
-              <div className="">
-                <div className="w-full flex items-center justify-center px-3 text-center border border-lime-400 rounded-xl bg-white">
-                  <span className="block w-full text-center mt-2">
-                    {wasteCat.name}
-                  </span>
-                  <Image
-                    className="relative"
-                    src="/images/garbage-separation.png"
-                    alt="Next.js Logo"
-                    width={80}
-                    height={80}
-                    priority
-                  />
+              <Link href={`/recycle/map?cat=${wasteCat.id}`}>
+                <div className="">
+                  <div className="w-full flex items-center justify-center px-3 text-center border border-lime-400 rounded-xl bg-white">
+                    <span className="block w-full text-center mt-2">
+                      {wasteCat.name}
+                    </span>
+                    <Image
+                      className="relative"
+                      src="/images/garbage-separation.png"
+                      alt="Next.js Logo"
+                      width={80}
+                      height={80}
+                      priority
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>

@@ -1,5 +1,6 @@
 import SearchBox from "@/components/app/SearchBox"
 import Image from "next/image"
+import Link from "next/link"
 const Home = () => {
   return (
     <div className=" mt-24 py-7 px-5 relative place-items-center">
@@ -48,6 +49,14 @@ const Home = () => {
               En yakın <b>Yeşil Nokta</b>'ya götür.
             </span>
           </div>
+        </div>
+        <div className="flex items-center mt-2 justify-center">
+          <Link
+            href="/recycle/map"
+            className="block mt-2 mb-3 border border-green-700 text-green-700 font-bold py-2 px-4 rounded"
+          >
+            Yeşil Noktaları Bul
+          </Link>
         </div>
       </div>
     </div>

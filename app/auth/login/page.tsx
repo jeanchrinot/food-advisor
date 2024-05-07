@@ -2,13 +2,28 @@
 
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import toast, { Toaster } from "react-hot-toast"
 
 const LoginPage = () => {
   const router = useRouter()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const onSubmit = () => {
     console.log("Submitted...")
-    router.push("/home")
+    if (email && password) {
+      const userInfo = {
+        name: "Sara",
+        email,
+        password,
+      }
+      localStorage.setItem("userInfo", JSON.stringify(userInfo))
+      toast.success("Giriş baraşılı!")
+      router.push("/home")
+    } else {
+      toast.error("Lütfen, E-posta ve Şifre giriniz!")
+    }
   }
 
   return (
@@ -30,7 +45,7 @@ const LoginPage = () => {
               </span>
               <input
                 type="email"
-                value=""
+                value="user@test.com"
                 placeholder="test@example.com"
                 className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
               />
@@ -41,7 +56,7 @@ const LoginPage = () => {
               </span>
               <input
                 type="password"
-                value=""
+                value="12345678"
                 placeholder=""
                 className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
               />
@@ -63,6 +78,7 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </main>
   )
 }
