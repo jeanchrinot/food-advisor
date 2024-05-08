@@ -37,7 +37,7 @@ const defaultMapCenter = {
 }
 
 // Generate random coordinates within 10 km of the default map center
-const radiusInKm = 10
+const radiusInKm = 3
 
 //Default zoom level, can be adjusted
 const defaultMapZoom = 12
@@ -50,36 +50,15 @@ const defaultMapOptions = {
   mapTypeId: "roadmap",
 }
 
-const coordinates = [
-  { ...defaultMapCenter },
-  {
-    id: 2,
-    lat: 40.780153222248174,
-    lng: 29.942181380537395,
-    name: "Kent 3",
-    title: "Plastik",
-    cat: 1,
-  },
-  {
-    id: 3,
-    lat: 40.77904049549875,
-    lng: 29.936662432644642,
-    name: "Tuana Evleri",
-    title: "Metal",
-    cat: 2,
-  },
-  {
-    id: 4,
-    lat: 40.76819489303909,
-    lng: 29.938197210475405,
-    name: "Devlet Hastanesi",
-    title: "Plastik",
-    cat: 1,
-  },
-]
-
 const customMarkerIcon = {
   url: `/images/map-marker.png`,
+  scaledSize: new window.google.maps.Size(40, 40), // Size of the marker
+  origin: new window.google.maps.Point(0, 0), // Position of the marker's image origin
+  anchor: new window.google.maps.Point(20, 40), // Position of the marker's anchor
+}
+
+const centerMarkerIcon = {
+  url: `/images/current-location-marker.png`,
   scaledSize: new window.google.maps.Size(40, 40), // Size of the marker
   origin: new window.google.maps.Point(0, 0), // Position of the marker's image origin
   anchor: new window.google.maps.Point(20, 40), // Position of the marker's anchor
@@ -95,13 +74,7 @@ const MapComponent = () => {
 
   const { wasteCategories } = data
 
-  const randomCoordinates = generateRandomCoordinates(
-    defaultMapCenter,
-    radiusInKm
-  )
-
   const searchParams = useSearchParams()
-  const [category, setCategory] = useState(null)
 
   useEffect(() => {
     // const { search } = router.query
@@ -197,6 +170,11 @@ const MapComponent = () => {
         {directions && showDirections && (
           <DirectionsRenderer directions={directions} />
         )}
+
+        <Marker
+          position={{ lat: defaultMapCenter.lat, lng: defaultMapCenter.lng }}
+          icon={centerMarkerIcon}
+        />
 
         {filteredCoordinates.length > 0 &&
           filteredCoordinates.map(({ lat, lng, title, id }, index) => (

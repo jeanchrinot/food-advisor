@@ -7,8 +7,8 @@ import toast, { Toaster } from "react-hot-toast"
 
 const LoginPage = () => {
   const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("user@test.com")
+  const [password, setPassword] = useState("12345678")
 
   const onSubmit = () => {
     console.log("Submitted...")

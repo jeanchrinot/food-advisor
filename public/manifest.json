@@ -1,0 +1,32 @@
+{
+    "theme_color": "#78CB43",
+    "background_color": "#78CB43",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/onboarding",
+    "name": "Ye\u015fil Nokta",
+    "short_name": "Ye\u015fil Nokta",
+    "description": "At\u0131\u011f\u0131 d\u00f6n\u00fc\u015ft\u00fcr, \u00e7evreye katk\u0131da bulun ve \u00f6d\u00fclleri kap!",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

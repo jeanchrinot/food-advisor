@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <div className=" mt-24 py-7 px-5 relative place-items-center">
       <div className="mb-16 grid text-left lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <p className="text-md text-green-700">Yeşil bir dünyaya adım a</p>
+        <p className="text-md text-green-700">Yeşil bir dünyaya adım at</p>
         <h2 className="mb-3 text-lg font-bold text-green-700">
           Atığı dönüştür, çevreye katkıda bulun ve ödülleri kap!
         </h2>
