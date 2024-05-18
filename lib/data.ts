@@ -61,6 +61,72 @@ const data = {
       image: "plastik_pil.jpg",
     },
   ],
+  rewards: [
+    {
+      id: 1,
+      name: "Hediye Kartı",
+      points: 100,
+      details: "Bu hediye kartını katılımcı mağazalarda kullanabilirsiniz.",
+    },
+    {
+      id: 2,
+      name: "İndirim Kuponu",
+      points: 50,
+      details: "Bir sonraki alışverişinizde %10 indirim kazanın.",
+    },
+    {
+      id: 3,
+      name: "Ücretsiz Kahve",
+      points: 50,
+      details:
+        "Ortak kafelerimizde ücretsiz bir fincan kahvenin keyfini çıkarın.",
+    },
+    {
+      id: 4,
+      name: "Sinema Bileti",
+      points: 150,
+      details: "Seçili sinemalarda ücretsiz bir sinema bileti için kullanın.",
+    },
+    {
+      id: 5,
+      name: "Gym Günlük Giriş",
+      points: 200,
+      details: "Herhangi bir ortak spor salonuna tam gün erişim sağlayın.",
+    },
+    {
+      id: 6,
+      name: "Spa Tedavisi",
+      points: 250,
+      details:
+        "Ortak lokasyonlarımızda rahatlatıcı bir spa tedavisinin tadını çıkarın.",
+    },
+    {
+      id: 7,
+      name: "Kitap Kuponu",
+      points: 75,
+      details:
+        "Katılımcı kitapçılarda herhangi bir kitap için bu kuponu kullanın.",
+    },
+    {
+      id: 8,
+      name: "Online Kurs Erişimi",
+      points: 300,
+      details: "Seçtiğiniz bir online kursa erişim kazanın.",
+    },
+    {
+      id: 9,
+      name: "Ücretsiz Öğle Yemeği",
+      points: 100,
+      details:
+        "Seçili restoranlarda ücretsiz bir öğle yemeğinin tadını çıkarın.",
+    },
+    {
+      id: 10,
+      name: "Müzik Yayın Aboneliği",
+      points: 150,
+      details: "Bir müzik yayın hizmetine bir aylık abonelik kazanın.",
+    },
+  ],
 }
 
 export default data

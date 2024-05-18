@@ -3,6 +3,13 @@ import Link from "next/link"
 import { useState } from "react"
 import toast, { Toaster } from "react-hot-toast"
 
+const companies = [
+  { id: 1, name: "A Firması" },
+  { id: 2, name: "B Firması" },
+  { id: 3, name: "C Firması" },
+  { id: 4, name: "D Firması" },
+]
+
 const Form = () => {
   const [company, setCompany] = useState("")
   const [date, setDate] = useState("")
@@ -32,13 +39,26 @@ const Form = () => {
           <span className="block text-left text-sm text-gray-700">
             Şirket Seçin
           </span>
-          <input
+          {/* <input
             type="email"
             defaultValue="X Firması"
             placeholder="X Firması"
             className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
             onChange={(e) => setCompany(e.target.value)}
-          />
+          /> */}
+          <select
+            id="company-select"
+            name="companies"
+            onChange={(e) => setCompany(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+          >
+            <option value="">Bir şirket seçin</option>
+            {companies.map((company) => (
+              <option key={company.id} value={company.id} className="w-full">
+                {company.name}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block mb-3">
           <span className="block text-left text-sm text-gray-700">

@@ -11,8 +11,10 @@ import {
   DirectionsService,
   DirectionsRenderer,
 } from "@react-google-maps/api"
-import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Scanner } from "@yudiel/react-qr-scanner"
+import toast, { Toaster } from "react-hot-toast"
 
 //Map's styling
 const defaultMapContainerStyle = {
@@ -65,12 +67,21 @@ const centerMarkerIcon = {
 }
 
 const MapComponent = () => {
+  const router = useRouter()
+  const [map, setMap] = useState(null)
   const [destination, setDestination] = useState(null)
+  const [showDirectionsSevice, setShowDirectionsSevice] = useState(false)
   const [directions, setDirections] = useState(null)
   const [showDirections, setShowDirections] = useState(false)
   const [allCoordinates, setAllCoordinates] = useState([])
   const [filteredCoordinates, setFilteredCoordinates] = useState([])
   const [selectedCoordinate, setSelectedCoordinate] = useState(null)
+  const [userLocation, setUserLocation] = useState(defaultMapCenter)
+  const pathIndex = useRef(0)
+  const pathCoordinates = useRef([])
+  const [QRCodeScanPrompt, setQRCodeScanPrompt] = useState(false)
+  const [userArrived, setUserArrived] = useState(false)
+  const [selectedCat, setSelectedCat] = useState(null)
 
   const { wasteCategories } = data
 
@@ -82,6 +93,7 @@ const MapComponent = () => {
     const cat = searchParams.get("cat") || ""
     console.log("cat", cat)
     if (cat) {
+      setSelectedCat(cat)
       const tempCoordinates = allCoordinates.filter((coord) => coord.cat == cat)
       setFilteredCoordinates(tempCoordinates)
       console.log("tempCoordinates", tempCoordinates)
@@ -132,6 +144,7 @@ const MapComponent = () => {
     }
     const foundCoordinate = filteredCoordinates.find((coord) => coord.id === id)
     setDestination(clickedMarkerPosition)
+    setShowDirectionsSevice(true)
     setSelectedCoordinate(foundCoordinate)
     setShowDirections(false)
   }
@@ -140,7 +153,106 @@ const MapComponent = () => {
     setShowDirections(true)
   }
 
-  console.log("filteredCoordinates", filteredCoordinates)
+  // SIMULATE USER MOVEMENT
+
+  const simulateUserMovement = useCallback(() => {
+    if (
+      pathCoordinates.current.length > 0 &&
+      pathIndex.current < pathCoordinates.current.length - 1
+    ) {
+      pathIndex.current += 1
+      setUserLocation(pathCoordinates.current[pathIndex.current])
+    }
+    // setUserLocation((prevLocation) => ({
+    //   ...prevLocation,
+    //   lat: prevLocation.lat + 0.001,
+    // }))
+  }, [])
+
+  // useEffect(() => {
+  //   const interval = setInterval(simulateUserMovement, 2000)
+  //   return () => clearInterval(interval)
+  // }, [simulateUserMovement])
+
+  const handleDirectionsCallback = (response) => {
+    if (response !== null) {
+      if (response.status === "OK") {
+        setShowDirectionsSevice(false)
+        setDirections(response)
+        // const route = response.routes[0]
+        // const legs = route.legs[0]
+        // const steps = legs.steps
+        // const coordinates = []
+        // steps.forEach((step) => {
+        //   step.path.forEach((latLng) => {
+        //     coordinates.push({
+        //       lat: latLng.lat(),
+        //       lng: latLng.lng(),
+        //     })
+        //   })
+        // })
+        // pathCoordinates.current = coordinates
+        // pathIndex.current = 0
+        // setUserLocation(coordinates[0])
+      } else {
+        console.error("Directions request failed due to " + response.status)
+      }
+    }
+    // if (response !== null) {
+    //   if (response.status === "OK") {
+    //     setDirections(response)
+    //   } else {
+    //     console.error("Directions request failed due to " + response.status)
+    //   }
+    // }
+  }
+
+  console.log("destination", destination)
+
+  const handleUserArrived = () => {
+    // setDirections(null)
+    setUserLocation(destination)
+    setUserArrived(true)
+  }
+
+  const handleQRCodePrompt = () => {
+    setQRCodeScanPrompt(true)
+  }
+
+  const handleQRCodeResult = (text, result) => {
+    console.log("text", text)
+    console.log("result", result)
+    setQRCodeScanPrompt(false)
+    setDirections(null)
+    // Give 50 points award to user
+    // Update Total Points
+    let totalPoints = parseInt(localStorage.getItem("totalPoints") || "0")
+    totalPoints += 50
+    localStorage.setItem("totalPoints", totalPoints)
+
+    // Update available points
+    let availablePoints = parseInt(
+      localStorage.getItem("availablePoints") || "0"
+    )
+    availablePoints += 50
+    localStorage.setItem("availablePoints", availablePoints)
+
+    // Update myCount
+    let myCount = parseInt(localStorage.getItem("myCount") || "0")
+    myCount += 1
+    localStorage.setItem("myCount", myCount)
+
+    toast.success("İşlem tamamlandı!")
+    // router.push("/home")
+    // setTimeout(() => {
+    //   router.push("/home") // Replace '/destination' with your desired destination route
+    // }, 2000) // 2000 milliseconds = 2 seconds
+  }
+
+  const handleQRCodeError = (e) => {
+    console.log(e)
+    toast.error("Bir hata oluştu, lütfen tekrar deneyin!")
+  }
 
   return (
     <div className="w-full pb-16">
@@ -149,16 +261,17 @@ const MapComponent = () => {
         center={defaultMapCenter}
         zoom={defaultMapZoom}
         options={defaultMapOptions}
+        // onLoad={(map) => setMap(map)}
       >
-        {destination && (
+        {showDirectionsSevice && (
           <DirectionsService
             options={{
               destination: destination,
-              origin: defaultMapCenter,
+              origin: userLocation,
               travelMode: "WALKING", // or 'WALKING', 'BICYCLING', 'TRANSIT'
             }}
+            // callback={handleDirectionsCallback}
             callback={(response) => {
-              console.log("response", response)
               if (response !== null) {
                 setDestination(null)
                 setDirections(response)
@@ -177,21 +290,27 @@ const MapComponent = () => {
         />
 
         {filteredCoordinates.length > 0 &&
-          filteredCoordinates.map(({ lat, lng, title, id }, index) => (
-            <Marker
-              key={index}
-              position={{ lat: lat, lng: lng }}
-              onClick={(event) => handleMarkerClick(event, id)}
-              label={{
+          filteredCoordinates.map(({ lat, lng, title, id }, index) => {
+            let label = null
+            if (selectedCat) {
+              label = {
                 fontSize: "8pt",
                 text: title,
                 color: "#000",
                 fontWeight: "bold",
-              }}
-              icon={customMarkerIcon}
-            />
-          ))}
-        {!showDirections && directions && selectedCoordinate && (
+              }
+            }
+            return (
+              <Marker
+                key={index}
+                position={{ lat: lat, lng: lng }}
+                onClick={(event) => handleMarkerClick(event, id)}
+                label={label}
+                icon={customMarkerIcon}
+              />
+            )
+          })}
+        {directions && selectedCoordinate && (
           <div className="w-1/2 absolute bottom-24 z-10 bg-white rounded-md mx-2 p-2">
             <h3 className="text-green-700 text-md font-bold">
               <span className="text-gray-800">{selectedCoordinate.title}</span>{" "}
@@ -206,13 +325,40 @@ const MapComponent = () => {
               >
                 Yol Tarifi
               </button>
-              {/* <button className="block text-xs border border-green-700 text-green-700 font-bold p-1 rounded">
-                Haritada Göster
-              </button> */}
+              {userArrived ? (
+                <button
+                  className="block text-xs border border-green-700 text-green-700 font-bold p-1 rounded"
+                  onClick={handleQRCodePrompt}
+                >
+                  QR Kod Okut
+                </button>
+              ) : (
+                <button
+                  className="block text-xs border border-green-700 text-green-700 font-bold p-1 rounded"
+                  onClick={handleUserArrived}
+                >
+                  Geldim
+                </button>
+              )}
             </div>
           </div>
         )}
+        {QRCodeScanPrompt && (
+          <div className="w-full absolute bottom-24 z-10 bg-white rounded-md p-2">
+            <h3 className="text-green-700 text-md font-bold">QR kodu okutun</h3>
+            <p className="text-gray-800 text-sm">
+              Atık atma işlemini tamamlamak için kutu üzerindeki qr kodunu
+              okutun
+            </p>
+            <Scanner
+              onResult={(text, result) => handleQRCodeResult(text, result)}
+              onError={(error) => handleQRCodeError(error)}
+              enabled={QRCodeScanPrompt}
+            />
+          </div>
+        )}
       </GoogleMap>
+      <Toaster />
     </div>
   )
 }
