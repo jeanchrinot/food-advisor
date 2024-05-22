@@ -21,14 +21,16 @@ const Home = () => {
         <div className="flex flex-row">
           <div className="w-1/2">
             <div className="w-full flex items-center justify-center px-3 text-center">
-              <Image
-                className="relative border border-green-700 rounded-full bg-white"
-                src="/images/garbage-separation.png"
-                alt="Next.js Logo"
-                width={90}
-                height={90}
-                priority
-              />
+              <Link href="/recycle" className="">
+                <Image
+                  className="relative border border-green-700 rounded-full bg-white"
+                  src="/images/garbage-separation.png"
+                  alt="Next.js Logo"
+                  width={90}
+                  height={90}
+                  priority
+                />
+              </Link>
             </div>
             <span className="block w-full text-center mt-2">
               Atıkları türüne göre ayırt.
@@ -36,14 +38,16 @@ const Home = () => {
           </div>
           <div className="w-1/2 items-center justify-center">
             <div className="w-full flex items-center justify-center px-3 text-center">
-              <Image
-                className="relative border border-green-700 rounded-full bg-white"
-                src="/images/green-point.png"
-                alt="Next.js Logo"
-                width={90}
-                height={90}
-                priority
-              />
+              <Link href="/recycle/map" className="">
+                <Image
+                  className="relative border border-green-700 rounded-full bg-white"
+                  src="/images/green-point.png"
+                  alt="Next.js Logo"
+                  width={90}
+                  height={90}
+                  priority
+                />
+              </Link>
             </div>
             <span className="block w-full text-center mt-2">
               En yakın <b>Yeşil Nokta</b>'ya götür.

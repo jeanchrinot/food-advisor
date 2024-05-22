@@ -56,8 +56,14 @@ const data = {
     },
     {
       id: 10,
-      name: "Plastik Pil",
-      desc: "Plastik piller, çevreye zararlı atıklardır ve özel olarak bertaraf edilmelidir. Doğru bir şekilde imha edilmezlerse, toprak, su ve hava kirliliğine neden olabilirler.",
+      name: "Plastik",
+      desc: "Plastikler, çevreye zararlı atıklardır ve özel olarak bertaraf edilmelidir. Doğru bir şekilde imha edilmezlerse, toprak, su ve hava kirliliğine neden olabilirler.",
+      image: "plastik_pil.jpg",
+    },
+    {
+      id: 11,
+      name: "Pil",
+      desc: "Piller, çevreye zararlı atıklardır ve özel olarak bertaraf edilmelidir. Doğru bir şekilde imha edilmezlerse, toprak, su ve hava kirliliğine neden olabilirler.",
       image: "plastik_pil.jpg",
     },
   ],
