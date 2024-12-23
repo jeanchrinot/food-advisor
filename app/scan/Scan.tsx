@@ -3,14 +3,14 @@ import SearchBox from "@/components/app/SearchBox"
 import { Camera, Image } from "lucide-react"
 import { useState } from "react"
 import Link from "next/link"
-const Home = () => {
+const Scan = () => {
   const [captureFrom, setCaptureFrom] = useState("")
 
   return (
     <div className=" mt-24 py-7 px-5 relative place-items-center">
       <div className="mb-16 grid text-left lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
         <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold mb-4">Food Advisor</h1>
+          <h1 className="text-2xl font-bold mb-4">Scan Your Food</h1>
           <p className="text-gray-600 mb-6 text-center">
             Upload or capture a photo to learn about the nutritional value of
             your food.
@@ -44,4 +44,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Scan
