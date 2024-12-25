@@ -25,7 +25,7 @@ const AppLayout = async ({
                     ? "text-green-700"
                     : "text-gray-800 opacity-90"
                 }`}
-                href="#"
+                href="/home"
               >
                 <span className="mb-1">
                   <Home className="w-6 h-6" />
@@ -55,7 +55,7 @@ const AppLayout = async ({
                     ? "text-green-700"
                     : "text-gray-800 opacity-90"
                 }`}
-                href="#"
+                href="/advisor"
               >
                 <span className="mb-1">
                   <MessageSquareMore className="w-6 h-6" />

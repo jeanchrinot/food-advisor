@@ -9,11 +9,14 @@ import {
   uploadPhoto,
 } from "@/lib/func"
 import Loading from "@/components/app/Loading"
+import { useStore } from "@/lib/store/useStore"
+import ScanResultsModal from "@/components/app/scan/ScanResultsModal"
 
 const CameraCapture: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [photo, setPhoto] = useState<string | null>(null)
+  const { foodScanResults, setFoodScanResults } = useStore()
   const [identifiedFood, setIdentifiedFood] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   //   const [predictionResults, setPredictionResults] = useState(null)
@@ -31,6 +34,7 @@ const CameraCapture: React.FC = () => {
 
   const startCamera = async () => {
     try {
+      // Attempt to access the rear camera
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { exact: "environment" } },
       })
@@ -39,7 +43,19 @@ const CameraCapture: React.FC = () => {
         videoRef.current.play()
       }
     } catch (error) {
-      console.error("Error accessing the camera:", error)
+      console.warn("Rear camera not available. Switching to front camera.")
+      try {
+        // Fallback to the front-facing camera
+        const fallbackStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+        })
+        if (videoRef.current) {
+          videoRef.current.srcObject = fallbackStream
+          videoRef.current.play()
+        }
+      } catch (fallbackError) {
+        console.error("Error accessing the camera:", fallbackError)
+      }
     }
   }
 
@@ -84,11 +100,14 @@ const CameraCapture: React.FC = () => {
     if (data?.nutrition_info) {
       //show nutrition data
       const identifiedFood = getHighestProbabilityPrediction(data.predictions)
-      setIdentifiedFood({
+      // setIdentifiedFood({
+      //   ...identifiedFood,
+      //   nutrition_info: data.nutrition_info,
+      // })
+      setFoodScanResults({
         ...identifiedFood,
         nutrition_info: data.nutrition_info,
       })
-      //   setPredictionResults({nutrition_info:data.nutrition_info,})
     } else {
       //show error message
       setErrorMessage(data?.error || data?.message)
@@ -99,38 +118,12 @@ const CameraCapture: React.FC = () => {
     startCamera()
   }, [])
 
-  console.log("identifiedFood", identifiedFood)
-
   return (
     <>
       <div className=" mt-24 py-7 px-3 relative place-items-center">
         <div className="mb-16 grid text-left lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
           <div className="flex flex-col items-center justify-center">
-            {identifiedFood && (
-              <>
-                <h1 className="text-2xl font-bold mb-2">
-                  Identified Food (
-                  {convertProbabilityToPercentage(identifiedFood?.probability)}
-                  %)
-                </h1>
-                <div className="mb-4">
-                  <h3 className="capitalize text-green-500 font-bold mb-2">
-                    {identifiedFood?.class_name}
-                  </h3>
-                  <h4 className="text-xl font-bold">Nutrients</h4>
-                  <p>Calorie: {identifiedFood?.nutrition_info?.kalori}</p>
-                  <p>
-                    Carbohydrate: {identifiedFood?.nutrition_info?.karbonhidrat}
-                  </p>
-                  <p>Proteine: {identifiedFood?.nutrition_info?.protein}</p>
-                  <p>Fat: {identifiedFood?.nutrition_info?.yağ}</p>
-                  <p>Fiber: {identifiedFood?.nutrition_info?.lif}</p>
-                </div>
-              </>
-            )}
-            {!identifiedFood && (
-              <h1 className="text-2xl font-bold mb-4">Capture Food Photo</h1>
-            )}
+            <h1 className="text-2xl font-bold mb-4">Capture Food Photo</h1>
 
             {errorMessage && (
               <h3 className="text-red-500 font-bold mb-2">{errorMessage}</h3>
@@ -193,6 +186,7 @@ const CameraCapture: React.FC = () => {
         </div>
       </div>
       {isMutating && <Loading />}
+      {foodScanResults && <ScanResultsModal />}
     </>
   )
 }

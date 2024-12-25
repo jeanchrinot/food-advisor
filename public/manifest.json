@@ -2,7 +2,7 @@
   "theme_color": "#22c55e",
   "background_color": "#22c55e",
   "scope": "/",
-  "start_url": "/scan",
+  "start_url": "/home",
   "icons": [
     {
       "purpose": "maskable",

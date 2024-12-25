@@ -1,24 +1,8 @@
-// // Function to send the photo data to the server
-// export const uploadPhoto = async (
-//   url: string,
-//   { arg }: { arg: { imageData: string } }
-// ) => {
-//   const res = await fetch(url, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       file: arg.imageData, // Send the base64 image data to the server
-//     }),
-//   })
+import { createId } from "@paralleldrive/cuid2"
 
-//   if (!res.ok) {
-//     console.log("res", res)
-//     throw new Error("Failed to upload image")
-//   }
-//   return res.json() // Return the server response (success or error)
-// }
+export const createObjectId = () => {
+  return createId()
+}
 
 interface Prediction {
   class_name: string
@@ -64,6 +48,33 @@ export const uploadPhoto = async (
   return res.json() // Return the server response (success or error)
 }
 
+export const uploadFromDevice = async (
+  url: string,
+  { arg }: { arg: { file: File } }
+) => {
+  const formData = new FormData() // Create a new FormData instance
+
+  // Append the File directly to the FormData instance
+  formData.append("file", arg.file, arg.file.name)
+
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData, // Send FormData
+  })
+
+  if (!res.ok) {
+    console.log("res", res)
+    if (res.status === 404) {
+      return res.json()
+      // throw new Error("Failed to scan image");
+    } else {
+      throw new Error("Failed to upload image")
+    }
+  }
+
+  return res.json() // Return the server response (success or error)
+}
+
 export const getHighestProbabilityPrediction = (
   predictions: Prediction[]
 ): Prediction => {
@@ -79,4 +90,21 @@ export const getHighestProbabilityPrediction = (
 
 export const convertProbabilityToPercentage = (probability: number): number => {
   return Math.round(probability * 100) // Multiply by 100 and round to nearest integer
+}
+
+export const createUserMessage = ({ text }: { text: string | null }) => {
+  const userMessage = {
+    id: createObjectId(),
+    content: text,
+    attachments: null,
+    senderId: null,
+    senderType: "user",
+    conversationId: null,
+    deleted: false,
+    status: "sending",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+
+  return userMessage
 }
