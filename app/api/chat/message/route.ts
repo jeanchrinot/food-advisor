@@ -7,21 +7,20 @@ export const POST = async (req: any) => {
   try {
     // Extract the message from the request body
     const payload = await req.json()
-    // const initialMessage = payload.message;
     let { message } = payload
-    let conversationId = "ddd"
-    let userId = "676a868b6756ad164f50242f"
 
+    let userId = "676a868b6756ad164f50242f" // default user id
+
+    // Fetch user
     const user = await prisma.user.findFirst({
       where: { id: userId },
     })
-
-    console.log("user", user)
-
+    // Find conversation that belongs to the user
     let conversation = await prisma.conversation.findFirst({
       where: { userId: user.id },
     })
 
+    // If the user doesn't have any conversation, create one
     if (!conversation) {
       conversation = await prisma.conversation.create({
         data: { user: { connect: { id: user!.id } } },
